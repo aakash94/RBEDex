@@ -1,31 +1,77 @@
 from sacred import Experiment
 from sacred.observers import FileStorageObserver
 from Solver.TestDummy import TestDummy
+from Solver.CartPoleNEC import EpisodicAgent
 
-ex = Experiment("Test1")
+ex = Experiment("RBEDex1")
+
 
 class Conductor:
 
-    def __init__(self, decay_rate=1, n_runs=1, start_val=1, sacred_ex = None):
+    def __init__(self,
+                 agent="CartPoleNEC",
+                 env="CartPole-v1",
+                 mode_rbed=True,
+                 ep_start=1.0,
+                 ep_min=0,
+                 ep_decay_rate=0.98,
+                 episode_count=500,
+                 target_increment=1,
+                 sacred_ex=None
+                 ):
 
-        # take in all the params and initialize them here
-        #self.param = param
-        self.td = TestDummy(rate = decay_rate, n_runs=n_runs, start_val=start_val, sacred_ex=sacred_ex)
+        if agent == 'CartPoleNEC':
+            self.solver = EpisodicAgent(env_string=env,
+                                        ep_start=ep_start,
+                                        ep_decay_rate=ep_decay_rate,
+                                        mode_rbed=mode_rbed,
+                                        ep_min=ep_min,
+                                        episode_count=episode_count,
+                                        target_increment=target_increment,
+                                        sacred_ex=sacred_ex)
+
+        elif agent == 'CartPole-DQN':
+            # Not yet supported
+            pass
+
+        else:
+            self.solver = TestDummy(rate=ep_decay_rate, n_runs=episode_count, start_val=ep_start, sacred_ex=sacred_ex)
 
     def go_run(self):
-
-        # placeholder probably call something to run here.
-        # print("Hello Sacred World", self.param)
-        self.td.run_test()
+        self.solver.exec()
 
 
 @ex.main
-def main(decay_rate, n_runs, start_val):
-    # the values initialized are initial placeholder values
-    # actual values will come from command line fom sacred
-    param_val = 0  # read this from config or whatever
+def main(agent="CartPoleNEC",
+         env="CartPole-v1",
+         mode_rbed=True,
+         ep_start=1.0,
+         ep_min=0,
+         ep_decay_rate=0.98,
+         episode_count=500,
+         target_increment=1):
 
-    cndctr = Conductor(decay_rate=decay_rate, n_runs=n_runs, start_val=start_val, sacred_ex=ex)
+    '''
+    print(agent)
+    print(mode_rbed)
+    print(env)
+    print(ep_start)
+    print(ep_min)
+    print(ep_decay_rate)
+    print(episode_count)
+    print(target_increment)
+    if mode_rbed:
+        print("Got true correct")
+    '''
+    cndctr = Conductor(agent=agent,
+                       env=env,
+                       mode_rbed=mode_rbed,
+                       ep_start=ep_start,
+                       ep_min=ep_min,
+                       ep_decay_rate=ep_decay_rate,
+                       episode_count=episode_count,
+                       target_increment=target_increment,
+                       sacred_ex=ex)
     cndctr.go_run()
 
 
@@ -34,13 +80,16 @@ def main(decay_rate, n_runs, start_val):
 def configure():
     # this needs to be a separate method
     # else main gets called twice
-    decay_rate = -1
-    n_runs = 1
-    start_val = 1
+    agent="CartPole-NEC"
+    env="CartPole-v1"
+    mode_rbed=True
+    ep_start=1.0
+    ep_min=0
+    ep_decay_rate=0.98
+    episode_count=500
+    target_increment=1
     fso_folder = "Runs"
     ex.observers.append(FileStorageObserver(fso_folder))
 
-
 if __name__ == '__main__':
     ex.run_commandline()
-    # main()

@@ -1,0 +1,1 @@
+python Conductor.py with agent="CartPoleNEC" env="CartPole-v1" mode_rbed=True ep_start=1.0 ep_min=0 ep_decay_rate=0.98 episode_count=500 target_increment=1 fso_folder="Runs\CPN_R"
