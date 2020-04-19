@@ -19,6 +19,7 @@ class Conductor:
                  episode_count=500,
                  target_increment=1,
                  schedule_timesteps=5000,
+                 steps_to_move_in=-1,
                  sacred_ex=None
                  ):
 
@@ -40,6 +41,7 @@ class Conductor:
                                         episode_count=episode_count,
                                         target_increment=target_increment,
                                         schedule_timesteps=schedule_timesteps,
+                                        steps_to_move_in=steps_to_move_in,
                                         sacred_ex=sacred_ex)
 
         else:
@@ -57,21 +59,10 @@ def main(agent="CartPoleNEC",
          ep_min=0,
          ep_decay_rate=0.98,
          episode_count=500,
-         schedule_timesteps = 5000,
+         steps_to_move_in=-1,
+         schedule_timesteps=5000,
          target_increment=1):
 
-    '''
-    print(agent)
-    print(mode_rbed)
-    print(env)
-    print(ep_start)
-    print(ep_min)
-    print(ep_decay_rate)
-    print(episode_count)
-    print(target_increment)
-    if mode_rbed:
-        print("Got true correct")
-    '''
     cndctr = Conductor(agent=agent,
                        env=env,
                        mode_rbed=mode_rbed,
@@ -81,6 +72,7 @@ def main(agent="CartPoleNEC",
                        episode_count=episode_count,
                        target_increment=target_increment,
                        schedule_timesteps=schedule_timesteps,
+                       steps_to_move_in=steps_to_move_in,
                        sacred_ex=ex)
     cndctr.go_run()
 
@@ -100,6 +92,7 @@ def configure():
     target_increment=1
     fso_folder = "Runs"
     schedule_timesteps = 5000
+    steps_to_move_in = -1
     ex.observers.append(FileStorageObserver(fso_folder))
 
 if __name__ == '__main__':
