@@ -31,6 +31,7 @@ class Conductor:
                                         ep_min=ep_min,
                                         episode_count=episode_count,
                                         target_increment=target_increment,
+                                        steps_to_move_in=steps_to_move_in,
                                         sacred_ex=sacred_ex)
 
         elif agent == 'CartPoleDQN':

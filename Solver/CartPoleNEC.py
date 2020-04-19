@@ -24,7 +24,7 @@ class EpisodicAgent():
                  mode_rbed = True,
                  ep_min = 0,
                  episode_count = 500,
-                 steps_to_move_in = 195,
+                 steps_to_move_in = -1,
                  target_increment = 1,
                  sacred_ex = None):
 
@@ -50,7 +50,13 @@ class EpisodicAgent():
         # RBED exclusive
         self.reward_threshold = 0  # Keep track of reward target for the agent
         self.epsilon_max = ep_start
-        self.steps_to_move_in = self.env_target  # Set to target value.
+
+        # Set to target value.
+        if steps_to_move_in > 0:
+            self.steps_to_move_in = steps_to_move_in
+        else:
+            self.steps_to_move_in = self.env_target
+
         self.quanta = (self.epsilon_max - self.epsilon_min) / self.steps_to_move_in  # what value to move epsilon by
         self.target_increment = target_increment # Howmuch to increment the target every time the agent meets it.
 
