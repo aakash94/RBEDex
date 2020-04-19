@@ -2,6 +2,7 @@ from sacred import Experiment
 from sacred.observers import FileStorageObserver
 from Solver.TestDummy import TestDummy
 from Solver.CartPoleNEC import EpisodicAgent
+from Solver.StableDQN import CarpoleDQN
 
 ex = Experiment("RBEDex1")
 
@@ -17,6 +18,7 @@ class Conductor:
                  ep_decay_rate=0.98,
                  episode_count=500,
                  target_increment=1,
+                 schedule_timesteps=5000,
                  sacred_ex=None
                  ):
 
@@ -30,9 +32,15 @@ class Conductor:
                                         target_increment=target_increment,
                                         sacred_ex=sacred_ex)
 
-        elif agent == 'CartPole-DQN':
-            # Not yet supported
-            pass
+        elif agent == 'CartPoleDQN':
+            self.solver = CarpoleDQN(env_string=env,
+                                        ep_start=ep_start,
+                                        mode_rbed=mode_rbed,
+                                        ep_min=ep_min,
+                                        episode_count=episode_count,
+                                        target_increment=target_increment,
+                                        schedule_timesteps=schedule_timesteps,
+                                        sacred_ex=sacred_ex)
 
         else:
             self.solver = TestDummy(rate=ep_decay_rate, n_runs=episode_count, start_val=ep_start, sacred_ex=sacred_ex)
@@ -49,6 +57,7 @@ def main(agent="CartPoleNEC",
          ep_min=0,
          ep_decay_rate=0.98,
          episode_count=500,
+         schedule_timesteps = 5000,
          target_increment=1):
 
     '''
@@ -71,6 +80,7 @@ def main(agent="CartPoleNEC",
                        ep_decay_rate=ep_decay_rate,
                        episode_count=episode_count,
                        target_increment=target_increment,
+                       schedule_timesteps=schedule_timesteps,
                        sacred_ex=ex)
     cndctr.go_run()
 
@@ -89,6 +99,7 @@ def configure():
     episode_count=500
     target_increment=1
     fso_folder = "Runs"
+    schedule_timesteps = 5000
     ex.observers.append(FileStorageObserver(fso_folder))
 
 if __name__ == '__main__':
