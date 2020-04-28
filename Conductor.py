@@ -4,6 +4,7 @@ from Solver.TestDummy import TestDummy
 from Solver.CartPoleNEC import EpisodicAgent
 from Solver.StableDQN import CarpoleDQN
 from Solver.MountainCarDQN import MountainCarDQN
+from Solver.MountainCarNumpy import MountainCarNumpy
 
 ex = Experiment("RBEDex1")
 
@@ -56,6 +57,17 @@ class Conductor:
                                         schedule_timesteps=schedule_timesteps,
                                         #steps_to_move_in=steps_to_move_in,
                                         sacred_ex=sacred_ex)
+
+        elif agent == 'MountainCarNumpy':
+            self.solver = MountainCarNumpy(env_string=env,
+                                        ep_start=ep_start,
+                                        mode_rbed=mode_rbed,
+                                        ep_min=ep_min,
+                                        episode_count=episode_count,
+                                        target_increment=target_increment,
+                                        steps_to_move_in=steps_to_move_in,
+                                        sacred_ex=sacred_ex)
+
 
         else:
             self.solver = TestDummy(rate=ep_decay_rate, n_runs=episode_count, start_val=ep_start, sacred_ex=sacred_ex)
