@@ -130,12 +130,13 @@ class Reaper:
             for i, file in enumerate(files):
                 folder_num = str(i + 1)
                 current_folder = folder + "" + folder_num + "/graphs/"
+                self.create_folder(current_folder)
                 data = json.load(open(file))
 
                 list_epsilon = data[self.EPSILON_VAL][self.VALUE_KEY]
                 list_reward = data[self.REWARD_VAL][self.VALUE_KEY]
                 list_avg100 = data[self.AVG100_VAL][self.VALUE_KEY]
-                solved_at = data[self.SOLVEDAT_VAL][self.VALUE_KEY][0]
+                #solved_at = data[self.SOLVEDAT_VAL][self.VALUE_KEY][0]
 
                 plt.clf()
                 plt.plot(list_epsilon)
@@ -160,3 +161,5 @@ class Reaper:
 
 if __name__ == '__main__':
     print("Itdoesntevenmatter")
+    r = Reaper()
+    r.metric_plot()
